@@ -1,0 +1,93 @@
+﻿@model SistemaStock.Models.RegistroViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/styles.css">
+</head>
+<body class="login-bg d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow login-card col-md-6 col-lg-5">
+        <div class="text-center mb-3">
+            <i class="bi bi-box-seam fs-1 text-primary"></i>
+            <h3 class="fw-bold mt-2">Sistema de Stock</h3>
+            <p class="text-muted small">Crear nueva cuenta</p>
+        </div>
+
+        <form asp-action="Registro" method="post">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Nombre -->
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label"></label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person"></i>
+                    </span>
+                    <input asp-for="Nombre" class="form-control" placeholder="Ingresa tu nombre" />
+                </div>
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <!-- Usuario -->
+            <div class="mb-3">
+                <label asp-for="NombreUsuario" class="form-label"></label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person-circle"></i>
+                    </span>
+                    <input asp-for="NombreUsuario" class="form-control" placeholder="Elige un nombre de usuario" />
+                </div>
+                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-lock"></i>
+                    </span>
+                    <input asp-for="Password" class="form-control" placeholder="Crea una contraseña" />
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <!-- Confirmar contraseña -->
+            <div class="mb-3">
+                <label asp-for="ConfirmarPassword" class="form-label"></label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-lock-fill"></i>
+                    </span>
+                    <input asp-for="ConfirmarPassword" class="form-control" placeholder="Repite tu contraseña" />
+                </div>
+                <span asp-validation-for="ConfirmarPassword" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-person-plus"></i> Registrarse
+            </button>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    ¿Ya tienes cuenta?
+                    <a asp-action="Login">Iniciar sesión</a>
+                </small>
+            </div>
+        </form>
+    </div>
+
+    <!-- Scripts de validación -->
+    <partial name="_ValidationScriptsPartial" />
+
+</body>
+</html>
