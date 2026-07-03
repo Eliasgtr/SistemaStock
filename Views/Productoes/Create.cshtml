@@ -1,54 +1,110 @@
 ﻿@model SistemaStock.Models.Producto
 
 @{
-    ViewData["Title"] = "Crear Producto";
+    ViewData["Title"] = "Nuevo Producto";
 }
 
-<h1>Crear</h1>
-
-<h4>Producto</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Codigo" class="control-label"></label>
-                <input asp-for="Codigo" class="form-control" />
-                <span asp-validation-for="Codigo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-             <div class="form-group">
-                <label asp-for="CategoriaId" class="control-label">Categoría</label>
-                <select asp-for="CategoriaId" class="form-control" asp-items="ViewBag.CategoriaId">
-                    <option value="">-- Seleccione una categoría --</option>
-                </select>
-                <span asp-validation-for="CategoriaId" class="text-danger"></span>
-                <a asp-controller="Categorias" asp-action="Create">Crear categoría</a>
-            </div> 
-            <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary"/>
-            </div>
-        </form>
+<div class="page-header">
+    <div class="page-header-text">
+        <nav class="breadcrumb-nav">
+            <a asp-action="Index">Productos</a>
+            <i class="bi bi-chevron-right"></i>
+            <span>Nuevo</span>
+        </nav>
+        <h1>Nuevo producto</h1>
+        <p>Completa la información para registrar un producto</p>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="form-card wide">
+    <form asp-action="Create">
+        <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+
+        <div class="form-section-title">Información general</div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label asp-for="Codigo" class="form-label"></label>
+                <div class="input-icon-group">
+                    <i class="bi bi-upc input-icon"></i>
+                    <input asp-for="Codigo" class="form-control" placeholder="Ej: PRD-001" />
+                </div>
+                <span asp-validation-for="Codigo" class="text-danger small"></span>
+            </div>
+            <div class="col-md-8">
+                <label asp-for="Nombre" class="form-label"></label>
+                <div class="input-icon-group">
+                    <i class="bi bi-box input-icon"></i>
+                    <input asp-for="Nombre" class="form-control" placeholder="Nombre del producto" />
+                </div>
+                <span asp-validation-for="Nombre" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Descripcion" class="form-label"></label>
+            <textarea asp-for="Descripcion" class="form-control" rows="3" placeholder="Descripción opcional del producto"></textarea>
+            <span asp-validation-for="Descripcion" class="text-danger small"></span>
+        </div>
+
+        <div class="form-section-title mt-4">Clasificación y precio</div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label asp-for="CategoriaId" class="form-label">Categoría</label>
+                <div class="input-icon-group">
+                    <i class="bi bi-tag input-icon"></i>
+                    <select asp-for="CategoriaId" class="form-select" asp-items="ViewBag.CategoriaId">
+                        <option value="">— Seleccione una categoría —</option>
+                    </select>
+                </div>
+                <span asp-validation-for="CategoriaId" class="text-danger small"></span>
+                <div class="form-hint">
+                    ¿No encuentras la categoría? <a asp-controller="Categorias" asp-action="Create">Crear categoría</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Precio" class="form-label"></label>
+                <div class="input-icon-group">
+                    <i class="bi bi-currency-dollar input-icon"></i>
+                    <input asp-for="Precio" class="form-control" type="number" step="0.01" min="0" placeholder="0.00" />
+                </div>
+                <span asp-validation-for="Precio" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="form-section-title mt-4">Inventario inicial</div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label asp-for="Stock" class="form-label">Stock inicial</label>
+                <div class="input-icon-group">
+                    <i class="bi bi-boxes input-icon"></i>
+                    <input asp-for="Stock" class="form-control" type="number" min="0" value="0" placeholder="0" />
+                </div>
+                <span asp-validation-for="Stock" class="text-danger small"></span>
+                <div class="form-hint">Cantidad con la que ingresa el producto al inventario.</div>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="StockMinimo" class="form-label">Stock mínimo</label>
+                <div class="input-icon-group">
+                    <i class="bi bi-exclamation-triangle input-icon"></i>
+                    <input asp-for="StockMinimo" class="form-control" type="number" min="0" value="5" placeholder="5" />
+                </div>
+                <span asp-validation-for="StockMinimo" class="text-danger small"></span>
+                <div class="form-hint">Alerta cuando el stock baje de este nivel.</div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-lg"></i> Guardar producto
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Cancelar
+            </a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
