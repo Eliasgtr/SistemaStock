@@ -157,7 +157,7 @@ namespace SistemaStock.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ostia 
+       
 
         private bool ProductoExists(int id)
         {
