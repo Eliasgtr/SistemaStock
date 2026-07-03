@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using SistemaStock.Filters;
 using SistemaStock.Models;
 
 namespace SistemaStock.Controllers
@@ -13,11 +14,13 @@ namespace SistemaStock.Controllers
             _logger = logger;
         }
 
+        [RequiereSesion]
         public IActionResult Index()
         {
             return View();
         }
 
+        [RequiereSesion]
         public IActionResult Privacy()
         {
             return View();

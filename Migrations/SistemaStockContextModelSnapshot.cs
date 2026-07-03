@@ -35,10 +35,57 @@ namespace SistemaStock.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("CategoriaId")
                         .HasName("PK__Categori__F353C1E567F61EEC");
 
+                    b.HasIndex("UsuarioId");
+
                     b.ToTable("Categorias");
+                });
+
+            modelBuilder.Entity("SistemaStock.Models.MovimientoStock", b =>
+                {
+                    b.Property<int>("MovimientoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovimientoId"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("Motivo")
+                        .HasMaxLength(200)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("Usuario")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("MovimientoId");
+
+                    b.HasIndex("ProductoId");
+
+                    b.ToTable("MovimientosStock");
                 });
 
             modelBuilder.Entity("SistemaStock.Models.Producto", b =>
@@ -82,10 +129,15 @@ namespace SistemaStock.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(5);
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("ProductoId")
                         .HasName("PK__Producto__A430AEA3CF94966D");
 
                     b.HasIndex("CategoriaId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Productos");
                 });
@@ -150,6 +202,17 @@ namespace SistemaStock.Migrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("SistemaStock.Models.Categoria", b =>
+                {
+                    b.HasOne("SistemaStock.Models.Usuarios", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("SistemaStock.Models.Producto", b =>
                 {
                     b.HasOne("SistemaStock.Models.Categoria", "Categoria")
@@ -158,7 +221,26 @@ namespace SistemaStock.Migrations
                         .IsRequired()
                         .HasConstraintName("FK__Productos__Categ__403A8C7D");
 
+                    b.HasOne("SistemaStock.Models.Usuarios", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Categoria");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("SistemaStock.Models.MovimientoStock", b =>
+                {
+                    b.HasOne("SistemaStock.Models.Producto", "Producto")
+                        .WithMany("Movimientos")
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Producto");
                 });
 
             modelBuilder.Entity("SistemaStock.Models.Usuarios", b =>
@@ -174,6 +256,11 @@ namespace SistemaStock.Migrations
             modelBuilder.Entity("SistemaStock.Models.Categoria", b =>
                 {
                     b.Navigation("Productos");
+                });
+
+            modelBuilder.Entity("SistemaStock.Models.Producto", b =>
+                {
+                    b.Navigation("Movimientos");
                 });
 #pragma warning restore 612, 618
         }

@@ -17,6 +17,7 @@ public partial class SistemaStockContext : DbContext
 
     public virtual DbSet<Categoria> Categorias { get; set; }
     public virtual DbSet<Producto> Productos { get; set; }
+    public virtual DbSet<MovimientoStock> MovimientosStock { get; set; }
     public virtual DbSet<Usuarios> Usuarios { get; set; }
     public virtual DbSet<Rol> Roles { get; set; }
 
@@ -29,6 +30,10 @@ public partial class SistemaStockContext : DbContext
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.Usuario).WithMany()
+                .HasForeignKey(d => d.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Producto>(entity =>
@@ -51,6 +56,29 @@ public partial class SistemaStockContext : DbContext
                 .HasForeignKey(d => d.CategoriaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Productos__Categ__403A8C7D");
+
+            entity.HasOne(d => d.Usuario).WithMany()
+                .HasForeignKey(d => d.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<MovimientoStock>(entity =>
+        {
+            entity.HasKey(e => e.MovimientoId);
+            entity.Property(e => e.Tipo)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.Motivo)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+            entity.Property(e => e.Usuario)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Fecha).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.Producto).WithMany(p => p.Movimientos)
+                .HasForeignKey(d => d.ProductoId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Rol>(entity =>

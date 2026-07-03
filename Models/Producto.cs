@@ -22,6 +22,14 @@ public partial class Producto
 
     public int? StockMinimo { get; set; }
 
+    public int UsuarioId { get; set; }
+
     [ValidateNever]
     public virtual Categoria Categoria { get; set; } = null!;
+
+    [ValidateNever]
+    public virtual Usuarios Usuario { get; set; } = null!;
+
+    [ValidateNever]
+    public virtual ICollection<MovimientoStock> Movimientos { get; set; } = new List<MovimientoStock>();
 }
