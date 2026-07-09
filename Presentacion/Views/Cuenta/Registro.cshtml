@@ -1,0 +1,115 @@
+@model SistemaStock.Application.ViewModels.RegistroViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro — Sistema de Stock</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/auth.css">
+</head>
+<body class="auth-bg">
+
+    <div class="auth-card auth-card-lg">
+        <div class="auth-logo-container">
+            <div class="auth-logo-badge">
+                <i class="bi bi-box-seam-fill"></i>
+            </div>
+            <h3 class="auth-title">Crear Cuenta</h3>
+            <p class="auth-subtitle">Regístrate para gestionar el inventario</p>
+        </div>
+
+        <form asp-action="Registro" method="post" autocomplete="off">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Nombre -->
+            <div class="mb-3">
+                <label asp-for="Nombre" class="auth-label"></label>
+                <div class="auth-input-group">
+                    <span class="auth-input-icon">
+                        <i class="bi bi-person"></i>
+                    </span>
+                    <input asp-for="Nombre" class="auth-form-control" placeholder="Ingresa tu nombre completo" autofocus />
+                </div>
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <!-- Usuario -->
+            <div class="mb-3">
+                <label asp-for="NombreUsuario" class="auth-label"></label>
+                <div class="auth-input-group">
+                    <span class="auth-input-icon">
+                        <i class="bi bi-person-circle"></i>
+                    </span>
+                    <input asp-for="NombreUsuario" class="auth-form-control" placeholder="Elige un nombre de usuario" />
+                </div>
+                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="mb-3">
+                <label asp-for="Password" class="auth-label"></label>
+                <div class="auth-input-group">
+                    <span class="auth-input-icon">
+                        <i class="bi bi-lock"></i>
+                    </span>
+                    <input asp-for="Password" type="password" class="auth-form-control" placeholder="Crea una contraseña" id="passwordInput" />
+                    <button type="button" class="password-toggle-btn" onclick="togglePassword('passwordInput', 'passwordIcon')" tabIndex="-1">
+                        <i class="bi bi-eye" id="passwordIcon"></i>
+                    </button>
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <!-- Confirmar contraseña -->
+            <div class="mb-4">
+                <label asp-for="ConfirmarPassword" class="auth-label"></label>
+                <div class="auth-input-group">
+                    <span class="auth-input-icon">
+                        <i class="bi bi-lock-fill"></i>
+                    </span>
+                    <input asp-for="ConfirmarPassword" type="password" class="auth-form-control" placeholder="Repite tu contraseña" id="confirmPasswordInput" />
+                    <button type="button" class="password-toggle-btn" onclick="togglePassword('confirmPasswordInput', 'confirmPasswordIcon')" tabIndex="-1">
+                        <i class="bi bi-eye" id="confirmPasswordIcon"></i>
+                    </button>
+                </div>
+                <span asp-validation-for="ConfirmarPassword" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="auth-btn-primary">
+                <i class="bi bi-person-plus"></i> Registrarse
+            </button>
+
+            <div class="auth-footer-text">
+                ¿Ya tienes una cuenta? <a asp-action="Login" class="auth-footer-link">Iniciar sesión</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            }
+        }
+    </script>
+</body>
+</html>

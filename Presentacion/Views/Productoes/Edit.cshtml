@@ -1,0 +1,111 @@
+﻿@model SistemaStock.Domain.Entities.Producto
+
+@{
+    ViewData["Title"] = "Editar Producto";
+}
+
+<div class="page-header">
+    <div class="page-header-text">
+        <nav class="breadcrumb-nav">
+            <a asp-action="Index">Productos</a>
+            <i class="bi bi-chevron-right"></i>
+            <span>Editar</span>
+        </nav>
+        <h1>Editar producto</h1>
+        <p>Actualiza la información de <strong>@Model.Nombre</strong></p>
+    </div>
+</div>
+
+<div class="form-card wide">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+        <input type="hidden" asp-for="ProductoId" />
+
+        <div class="form-section-title">Información general</div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label asp-for="Codigo" class="form-label"></label>
+                <div class="input-icon-group">
+                    <i class="bi bi-upc input-icon"></i>
+                    <input asp-for="Codigo" class="form-control" />
+                </div>
+                <span asp-validation-for="Codigo" class="text-danger small"></span>
+            </div>
+            <div class="col-md-8">
+                <label asp-for="Nombre" class="form-label"></label>
+                <div class="input-icon-group">
+                    <i class="bi bi-box input-icon"></i>
+                    <input asp-for="Nombre" class="form-control" />
+                </div>
+                <span asp-validation-for="Nombre" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Descripcion" class="form-label"></label>
+            <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Descripcion" class="text-danger small"></span>
+        </div>
+
+        <div class="form-section-title mt-4">Clasificación y precio</div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label asp-for="CategoriaId" class="form-label">Categoría</label>
+                <div class="input-icon-group">
+                    <i class="bi bi-tag input-icon"></i>
+                    <select asp-for="CategoriaId" class="form-select" asp-items="ViewBag.CategoriaId"></select>
+                </div>
+                <span asp-validation-for="CategoriaId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Precio" class="form-label"></label>
+                <div class="input-icon-group">
+                    <i class="bi bi-currency-dollar input-icon"></i>
+                    <input asp-for="Precio" class="form-control" type="number" step="0.01" min="0" />
+                </div>
+                <span asp-validation-for="Precio" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="form-section-title mt-4">Inventario</div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Stock actual</label>
+                <div class="input-icon-group">
+                    <i class="bi bi-boxes input-icon"></i>
+                    <input class="form-control" type="text" value="@(Model.Stock ?? 0) unidades" readonly disabled />
+                </div>
+                <div class="form-hint">
+                    Para modificar el stock usa
+                    <a asp-action="Movimiento" asp-route-id="@Model.ProductoId" asp-route-tipo="Entrada">entrada</a>
+                    o
+                    <a asp-action="Movimiento" asp-route-id="@Model.ProductoId" asp-route-tipo="Salida">salida</a>.
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="StockMinimo" class="form-label"></label>
+                <div class="input-icon-group">
+                    <i class="bi bi-exclamation-triangle input-icon"></i>
+                    <input asp-for="StockMinimo" class="form-control" type="number" min="0" />
+                </div>
+                <span asp-validation-for="StockMinimo" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-lg"></i> Guardar cambios
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

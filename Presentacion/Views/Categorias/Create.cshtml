@@ -1,0 +1,45 @@
+﻿@model SistemaStock.Domain.Entities.Categoria
+
+@{
+    ViewData["Title"] = "Nueva Categoría";
+}
+
+<div class="page-header">
+    <div class="page-header-text">
+        <nav class="breadcrumb-nav">
+            <a asp-action="Index">Categorías</a>
+            <i class="bi bi-chevron-right"></i>
+            <span>Nueva</span>
+        </nav>
+        <h1>Nueva categoría</h1>
+        <p>Agrega una categoría para organizar tus productos</p>
+    </div>
+</div>
+
+<div class="form-card">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <div class="input-icon-group">
+                <i class="bi bi-tag input-icon"></i>
+                <input asp-for="Nombre" class="form-control" placeholder="Ej: Electrónica, Ropa, Alimentos..." />
+            </div>
+            <span asp-validation-for="Nombre" class="text-danger small"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-lg"></i> Guardar categoría
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

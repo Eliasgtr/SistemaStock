@@ -1,0 +1,47 @@
+﻿@model SistemaStock.Domain.Entities.Categoria
+
+@{
+    ViewData["Title"] = "Eliminar Categoría";
+}
+
+<div class="page-header">
+    <div class="page-header-text">
+        <nav class="breadcrumb-nav">
+            <a asp-action="Index">Categorías</a>
+            <i class="bi bi-chevron-right"></i>
+            <span>Eliminar</span>
+        </nav>
+        <h1>Eliminar categoría</h1>
+    </div>
+</div>
+
+<div class="delete-card">
+    <div class="delete-card-header">
+        <div class="delete-icon"><i class="bi bi-trash"></i></div>
+        <div>
+            <h2>¿Estás seguro de eliminar esta categoría?</h2>
+            <p>Esta acción no se puede deshacer. Se eliminará permanentemente <strong>@Model.Nombre</strong>.</p>
+        </div>
+    </div>
+
+    <div class="delete-card-body">
+        <dl class="detail-grid">
+            <div class="detail-item">
+                <dt>Nombre</dt>
+                <dd>@Model.Nombre</dd>
+            </div>
+        </dl>
+    </div>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CategoriaId" />
+        <div class="delete-card-actions">
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Sí, eliminar
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Cancelar
+            </a>
+        </div>
+    </form>
+</div>
