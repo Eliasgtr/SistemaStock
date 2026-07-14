@@ -50,6 +50,16 @@ if (usePostgres)
     {
         var db = scope.ServiceProvider.GetRequiredService<SistemaStockContext>();
         db.Database.EnsureCreated();
+
+        // Seed roles if empty
+        if (!db.Roles.Any())
+        {
+            db.Roles.AddRange(
+                new Rol { Nombre = "Administrador" },
+                new Rol { Nombre = "Usuario" }
+            );
+            db.SaveChanges();
+        }
     }
 }
 
