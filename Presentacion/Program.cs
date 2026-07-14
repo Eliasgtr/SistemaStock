@@ -9,11 +9,25 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var conString = builder.Configuration.GetConnectionString("ConexionSQL") ??
-     throw new InvalidOperationException("Connection string 'ConexionSQL'" +
-    " not found.");
+var useSqlite = builder.Configuration.GetValue<bool>("UseSQLite") || 
+                builder.Environment.IsProduction();
+
 builder.Services.AddDbContext<SistemaStockContext>(options =>
-    options.UseSqlServer(conString));
+{
+    if (useSqlite)
+    {
+        var dbPath = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
+        Directory.CreateDirectory(dbPath);
+        var connectionString = $"Data Source={Path.Combine(dbPath, "stock.db")}";
+        options.UseSqlite(connectionString);
+    }
+    else
+    {
+        var conString = builder.Configuration.GetConnectionString("ConexionSQL") ??
+             throw new InvalidOperationException("Connection string 'ConexionSQL' not found.");
+        options.UseSqlServer(conString);
+    }
+});
 
 builder.Services.AddSession(options =>
 {
@@ -23,6 +37,15 @@ builder.Services.AddSession(options =>
 });
 
 var app = builder.Build();
+
+if (useSqlite)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<SistemaStockContext>();
+        db.Database.EnsureCreated();
+    }
+}
 
 app.UseSession();
 

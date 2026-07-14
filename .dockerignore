@@ -1,0 +1,10 @@
+**/.git
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/out
+**/*.db
+**/*.db-journal
+**/appsettings.Development.json
+**/SistemaStock.csproj.user
