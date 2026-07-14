@@ -75,7 +75,8 @@ public partial class SistemaStockContext : DbContext
             entity.Property(e => e.Usuario)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.Fecha).HasDefaultValueSql("(getdate())");
+            var isPostgres = Database.ProviderName?.Contains("PostgreSQL") ?? false;
+            entity.Property(e => e.Fecha).HasDefaultValueSql(isPostgres ? "NOW()" : "(getdate())");
 
             entity.HasOne(d => d.Producto).WithMany(p => p.Movimientos)
                 .HasForeignKey(d => d.ProductoId)
