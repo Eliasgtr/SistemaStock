@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -263,6 +263,16 @@ namespace SistemaStock.Web.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Notificaciones()
+        {
+            var productosBajos = await MisProductos
+                .Include(p => p.Categoria)
+                .Where(p => p.Stock == 0 || p.Stock <= p.StockMinimo)
+                .ToListAsync();
+
+            return View(productosBajos);
         }
 
         private async Task<bool> ProductoExistsAsync(int id) =>

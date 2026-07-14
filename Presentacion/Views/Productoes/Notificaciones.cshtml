@@ -1,0 +1,118 @@
+@model IEnumerable<SistemaStock.Domain.Entities.Producto>
+@{
+    ViewData["Title"] = "Notificaciones";
+    var agotadosCount = Model.Count(p => !p.Stock.HasValue || p.Stock == 0);
+    var bajosCount = Model.Count(p => p.Stock.HasValue && p.StockMinimo.HasValue && p.Stock <= p.StockMinimo && p.Stock > 0);
+}
+
+<div class="page-header">
+    <div class="page-header-text">
+        <h1>Notificaciones de Stock</h1>
+        <p>Monitorea y reabastece los productos que requieren atención</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon danger"><i class="bi bi-x-circle-fill"></i></div>
+        <div>
+            <div class="stat-value">@agotadosCount</div>
+            <div class="stat-label">Agotados por completo</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon warning"><i class="bi bi-exclamation-triangle-fill"></i></div>
+        <div>
+            <div class="stat-value">@bajosCount</div>
+            <div class="stat-label">Bajo stock mínimo</div>
+        </div>
+    </div>
+</div>
+
+<div class="content-card mt-4">
+    <div class="content-card-header">
+        <h2>Listado de Alertas de Inventario</h2>
+        <span class="badge bg-secondary rounded-pill">Total alertas: @Model.Count()</span>
+    </div>
+
+    <div class="content-card-body">
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                <h3>¡Todo al día!</h3>
+                <p>No se encontraron productos agotados o con bajo stock mínimo en tu inventario.</p>
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Volver a Productos
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table-modern">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th class="text-center">Stock Mínimo</th>
+                            <th class="text-center">Stock Actual</th>
+                            <th>Estado / Alerta</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderBy(p => p.Stock ?? 0))
+                        {
+                            var esAgotado = !item.Stock.HasValue || item.Stock == 0;
+                            <tr>
+                                <td>
+                                    <span class="table-product-code">@item.Codigo</span>
+                                </td>
+                                <td>
+                                    <span class="table-product-name">@item.Nombre</span>
+                                </td>
+                                <td>
+                                    <span class="badge-category">@(item.Categoria?.Nombre ?? "Sin categoría")</span>
+                                </td>
+                                <td class="text-center fw-semibold">
+                                    @(item.StockMinimo ?? 5)
+                                </td>
+                                <td class="text-center">
+                                    <span class="fw-bold @(esAgotado ? "text-danger" : "text-warning")">
+                                        @(item.Stock ?? 0)
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (esAgotado)
+                                    {
+                                        <span class="badge-stock out">
+                                            <i class="bi bi-x-circle-fill"></i> Agotado
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-stock low">
+                                            <i class="bi bi-exclamation-triangle-fill"></i> Stock Bajo
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-2">
+                                        <a asp-action="Movimiento" asp-route-id="@item.ProductoId" asp-route-tipo="Entrada" class="btn btn-sm btn-success">
+                                            <i class="bi bi-plus-lg"></i> Registrar Entrada
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.ProductoId" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> Detalles
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

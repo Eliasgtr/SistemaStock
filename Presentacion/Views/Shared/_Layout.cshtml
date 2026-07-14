@@ -1,7 +1,17 @@
-﻿@{
+@inject SistemaStock.Infrastructure.Persistence.SistemaStockContext DbContext
+@{
     var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
     var userName = Context.Session.GetString("Nombre") ?? "Usuario";
     var userInitial = userName.Length > 0 ? userName[0].ToString().ToUpper() : "U";
+
+    var userIdStr = Context.Session.GetString("UsuarioId");
+    int countLowStock = 0;
+    if (int.TryParse(userIdStr, out int userId))
+    {
+        countLowStock = DbContext.Productos
+            .Count(p => p.UsuarioId == userId && (p.Stock == 0 || p.Stock <= p.StockMinimo));
+    }
 }
 <!DOCTYPE html>
 <html lang="es">
@@ -25,7 +35,7 @@
             </a>
 
             <nav class="sidebar-nav">
-                <a class="sidebar-link @(controller == "Productoes" ? "active" : "")"
+                <a class="sidebar-link @(controller == "Productoes" && action != "Notificaciones" ? "active" : "")"
                    asp-controller="Productoes" asp-action="Index">
                     <i class="bi bi-box-seam"></i>
                     <span>Productos</span>
@@ -34,6 +44,15 @@
                    asp-controller="Categorias" asp-action="Index">
                     <i class="bi bi-tags"></i>
                     <span>Categorías</span>
+                </a>
+                <a class="sidebar-link @(controller == "Productoes" && action == "Notificaciones" ? "active" : "")"
+                   asp-controller="Productoes" asp-action="Notificaciones">
+                    <i class="bi bi-bell"></i>
+                    <span>Notificaciones</span>
+                    @if (countLowStock > 0)
+                    {
+                        <span class="badge bg-danger rounded-pill ms-auto" style="font-size: 0.75rem; padding: 0.25em 0.6em;">@countLowStock</span>
+                    }
                 </a>
             </nav>
 
