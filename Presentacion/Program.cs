@@ -9,17 +9,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var useSqlite = builder.Configuration.GetValue<bool>("UseSQLite") || 
-                builder.Environment.IsProduction();
+var usePostgres = builder.Environment.IsProduction();
 
 builder.Services.AddDbContext<SistemaStockContext>(options =>
 {
-    if (useSqlite)
+    if (usePostgres)
     {
-        var dbPath = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
-        Directory.CreateDirectory(dbPath);
-        var connectionString = $"Data Source={Path.Combine(dbPath, "stock.db")}";
-        options.UseSqlite(connectionString);
+        // Try getting connection string from different common environment configurations
+        var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
+                               builder.Configuration.GetConnectionString("ConexionPostgres") ??
+                               builder.Configuration.GetConnectionString("ConexionSQL");
+                               
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException("La cadena de conexión a PostgreSQL no fue configurada.");
+        }
+        options.UseNpgsql(connectionString);
     }
     else
     {
@@ -38,7 +43,7 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-if (useSqlite)
+if (usePostgres)
 {
     using (var scope = app.Services.CreateScope())
     {
