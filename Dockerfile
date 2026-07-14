@@ -26,6 +26,7 @@ COPY --from=build /app .
 # Configure ASP.NET Core environment and expose port
 ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true
 EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "SistemaStock.Web.dll"]

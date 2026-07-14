@@ -24,6 +24,7 @@ builder.Services.AddDbContext<SistemaStockContext>(options =>
         {
             throw new InvalidOperationException("La cadena de conexión a PostgreSQL no fue configurada.");
         }
+        connectionString = ConvertPostgresUriToConnectionString(connectionString);
         options.UseNpgsql(connectionString);
     }
     else
@@ -76,3 +77,20 @@ app.MapControllerRoute(
 
 
 app.Run();
+
+string ConvertPostgresUriToConnectionString(string uriString)
+{
+    if (uriString.StartsWith("postgres://") || uriString.StartsWith("postgresql://"))
+    {
+        var uri = new Uri(uriString);
+        var userInfo = uri.UserInfo.Split(':');
+        var username = userInfo[0];
+        var password = userInfo.Length > 1 ? userInfo[1] : "";
+        var host = uri.Host;
+        var port = uri.Port == -1 ? 5432 : uri.Port;
+        var database = uri.AbsolutePath.TrimStart('/');
+        
+        return $"Host={host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true;";
+    }
+    return uriString;
+}
